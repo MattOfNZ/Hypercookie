@@ -1,0 +1,109 @@
+<html>
+	<head><title>Create Hypercookie Package</title></head>
+	<script>
+		// This is the rough structure of a 1Blocker package ast at 2015-09-19
+		var package_sample = [
+			{
+				"id" : "",
+				"name" : "Hypercookie",
+				"rules" :[
+					
+				]
+			}
+		];
+		
+		// Each rule must contain these as a minimum, use this as a template
+		var rule_sample = {
+			"id" : "",
+			"name" : "",
+			"content" : {
+				"trigger" : {
+					"url-filter" : ".*", // all domains
+					"load-type" : [] // was always empty in my testing for CSS hiding.
+				},
+				"action" : {
+					"type" : "css-display-none", // we're using this to hide elements
+					"selector" : ""
+				}
+			}
+		};
+		
+		function init() {
+			guid_to_page();
+		};
+		
+		function guid_to_page() {
+			document.getElementById("guid").value = guid();
+		}
+		
+		// Here be lazy GUIDs.  These will be okay for a proof of concept.  (So will an inline script tag)
+		// Borrowed from http://guid.us/GUID/JavaScript
+		function guid() {
+			var S4 = function () {
+				return (((1+Math.random())*0x10000)|0).toString(16).substring(1); 
+			}
+			
+			// stitch in '4' in the third group
+			return (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+		}
+		
+		// build a ruleset by generating "css-display-none" entries for every distinct "non-possibility"
+		// for our given GUID.  (Please excuse the lazy object cloning)
+		function generate_json(){
+			var outbound = JSON.parse(JSON.stringify(package_sample));
+			var current_guid = document.getElementById("guid").value;
+			var guidchars = current_guid.replace(/-/g,"").split('');
+			var selector_base = ".hypercookie";
+			var current_rule = JSON.parse(JSON.stringify(rule_sample));
+			
+			outbound[0].id = guid();
+			outbound[0].name += "(" + current_guid.substr(26) + ")"; // if the name gets too long you can't enable it. Works on iPhone 6.
+			
+			for (var i = 0; i < guidchars.length; i++) {
+				guidchars[i] = parseInt(guidchars[i],16);
+				
+				for (var j = 0; j < 16; j++)
+				{
+					if (j != guidchars[i])
+					{
+						current_rule.id = guid();
+						current_rule.name = "Hide GUID (Pos " + i + ", Char \"" + j.toString(16) + "\")";
+						current_rule.content.action.selector = selector_base + " .p" + i + " .c" + j.toString(16);
+						
+						outbound[0].rules.push(JSON.parse(JSON.stringify(current_rule)));
+					}
+				}
+			}
+			
+			// and add a detector 
+			current_rule.id = guid();
+			current_rule.name = "Hypercookie Detector";
+			current_rule.content.action.selector = selector_base + " .detector";
+						
+			outbound[0].rules.push(JSON.parse(JSON.stringify(current_rule)));
+		
+			
+			var result = JSON.stringify(outbound);
+			
+			// JSON result output
+			document.getElementById("json_preview").value = result;
+			
+			// Data URI for downloading
+			var encodedUri = "data:text/plain;charset=utf-8," + encodeURI(result);
+			var link = document.getElementById("download_link");
+			link.setAttribute("href", encodedUri);
+			link.setAttribute("download", "hypercookie_for_guid_" + current_guid +".1blockpkg");
+						
+		}
+	</script>
+	<body onload="init()">
+		Create for GUID: <input type="text" id="guid" style="width:300px" readonly />
+		<br/>
+		<input type="button" value="Generate Package JSON" onclick="generate_json()" /> <input type="button" value="New GUID" onclick="guid_to_page()">
+		<br/>
+		<br/>
+		Package JSON Preview: <br/>
+		<textarea id="json_preview" rows="20" cols="30" readonly></textarea><br/><br/>
+		<a id="download_link">Download Package</a>
+	</body>
+</html>
