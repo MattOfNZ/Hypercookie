@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<title>Read Hypercookie</title>
+		<script>
+			function hypercookie() {
+				var detected = false; // swap to true to see all elements rendered (for debugging)
+				
+				//the detector element will be hidden by the content blocker
+				if (!detected)
+				{
+					detected = !(document.querySelector(".hypercookie").innerText == "Detector");  
+				}
+				
+				if (detected)
+				{
+					document.getElementById("message").innerText = "Hypercookie Detector Found";
+					
+					// inject the detector matrix elements into the hypercookie.
+					var html = "";
+					
+					for (var i = 0; i < 32; i++) {
+						html += "<div class=\"p" + i + "\">";
+						for (var j = 0; j < 16; j++)
+						{
+							html += "<div class=\"c" + j.toString(16) + "\">" + j.toString(16) +"</div>";
+						}
+						html += "</div>";
+					}
+					
+					// apply the detector matrix to the page
+					document.querySelector(".hypercookie").innerHTML = html;
+					
+					// because Safari is so efficient, we already have the GUID:
+					var guid = document.querySelector(".hypercookie").innerText.replace(/\s/g, '')
+					//413ca98a-a73e-4ff4-8ef2-de37acf58c68
+					var guid_formatted = guid.substring(0,8)+"-"+guid.substring(8,12)+"-"+guid.substring(12,16)+"-"+guid.substring(16,20)+"-"+guid.substring(20);;
+					document.getElementById("message").innerText  = "Found: " + guid_formatted;
+				}
+				else
+				{
+					document.getElementById("message").innerText = "Hypercookie Detector Not Found";
+				}
+				
+			}
+		</script>
+	</head>
+	<body onload="hypercookie()">
+		<div id="message">No Script Loaded</div>
+		
+		<hr/>
+		<div class="hypercookie">
+			<div class="detector">Detector</div>
+		</div>
+	</body>
+</html>
