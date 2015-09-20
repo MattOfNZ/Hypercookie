@@ -3,6 +3,8 @@
 
 In this repository, you will find a working example of a cross-domain "hypercookie", implemented by leveraging the Content Blockers introduced in iOS 9.  This "hypercookie" is able to be used to uniquely identify a user on any domain, and in all browsing modes (private or otherwise).  It also forms a proof of concept for an outbound communications channel formed in content blocking rules which could be used for other forms of information disclosure. 
 
+[See a demonstration video here](http://www.youtube.com/watch?v=aTqvmDLUwVM)
+
 __Note:__ The code that is currently available in this repository is the first functional version of the code, released in a very early stage.  Consider it a working prototype, a proof of concept.  In reviewing the technique, there are far more efficient means that could be used to transmit data using a content blocker, but this one is easy to understand and explain so I've stuck with it.  I'll leave making a more efficient version up to you.
 
 ### iOS 9 Content Blockers
@@ -77,7 +79,7 @@ This allows us to extract the original GUID, as Safari has removed every digit t
 ### The Code
 In this repository, you will find two files:
 
-___create_package.html___ This will allow you to create your own package with your own random GUID for use with the iOS 9 Content Blocker.  It includes the JSON for your review, and the ability to download this file as a [1Blocker](https://itunes.apple.com/us/app/1blocker-block-ads-tracking/id1025729002?mt=8) Package - allowing you to deploy these rules to your own device for testing.  You can deploy multiple GUIDs to your device, but this prototype will fail to detect the cookie if you run more than one package at a time.  (Please don't leave this rule "on" for your device once you've seen it in action.  I'm trying to make you aware of tracking, not get you tracked.)
+__create_package.html__ This will allow you to create your own package with your own random GUID for use with the iOS 9 Content Blocker.  It includes the JSON for your review, and the ability to download this file as a [1Blocker](https://itunes.apple.com/us/app/1blocker-block-ads-tracking/id1025729002?mt=8) Package - allowing you to deploy these rules to your own device for testing.  You can deploy multiple GUIDs to your device, but this prototype will fail to detect the cookie if you run more than one package at a time.  (Please don't leave this rule "on" for your device once you've seen it in action.  I'm trying to make you aware of tracking, not get you tracked.)
 
 __read_hypercookie.html__ This shows a working implementation of reading the hypercookie, and displaying it inline in the page.  It also includes a basic detection routine, and will provide some messages to tell you what has occured.  Everything below the horizontal line on this page is the hypercookie itself, allowing you to 'see it in action'.  
 
@@ -88,7 +90,7 @@ __Apple's Review Process:__ An app released to the app store goes through a revi
 
 __Third-Party Packages:__ If some person on GitHub offers you an awesome third-party package with content blocking rules, maybe you should consider declining that offer (unless you're willing to read and review the rules, or trust them not to track you.)  The ball is in your court with this one.  Don't install random stuff on your device.
 
-__Requires Massive Collusion To Execute:__ While it's true that some advertisers could distribute this kind of code through their networks, we have other mitigations (resource blocking etc) to prevent this from ever executing.  In the current state of play, this doesn't seem practical to me.   However, with the suddenly accessible content blockers on mobile devices challenging the status quo, this could change.  
+__Requires Massive Collusion To Execute:__ While it's true that some advertisers could distribute this kind of code through their networks, we have other mitigations (resource blocking etc) to prevent this from ever executing.  In addition, developers of content blocking apps would have to be in on the act.  In the current state of play, this doesn't seem practical to me.   However, with the suddenly accessible content blockers on mobile devices challenging the status quo, this could change.  
 
 ### Potential Improvements
 The technique presented here is pretty unsophisticated;  and there are many potential improvements.  Here are my top few:
